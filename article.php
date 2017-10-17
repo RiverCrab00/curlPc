@@ -1,4 +1,5 @@
 <?php
+//curl获得页面
 function request($url,$https=true,$proxy=false,$method='get',$data=null){
     //1.初始化
     $ch = curl_init($url);
@@ -42,19 +43,20 @@ function request($url,$https=true,$proxy=false,$method='get',$data=null){
     curl_close($ch);
     return $content;
   }
+//引入phpquery
 require './phpQuery/phpQuery.php';
 //引入配置文件
-require './conf/config.php';
+//require './conf/config.php';
 function getContent($url){
 	$html=request($url,false);
 	$doc=phpQuery::newDocumentHTML($html);
 	$content='';
-	foreach (pq('p',$doc) as $one) {
+	foreach (pq('.article p',$doc) as $one) {
 	 	$content.='<p>'.pq($one)->text().'</p>';
 	}
 	return $content;
 }
-$base='http://ddh.bucea.edu.cn/lcddk/';
+$base='http://ddh.bucea.edu.cn/djzs/';
 $url=$base.'index.htm';
 $html=request($url,false);
 $doc=phpQuery::newDocumentHTML($html); 
@@ -81,7 +83,7 @@ $proxyArray[] = $proxyOne;
 $db=new PDO('mysql:host=139.159.217.83;charset=utf8;dbname=test;','root','950612zyl');
 for($i=0;$i<count($proxyArray);$i++){
 	$time=time();
-	$sql="insert into article(title,content,publish_time,created_time,type) value('{$proxyArray[$i]['title']}','{$proxyArray[$i]['content']}',{$proxyArray[$i]['time']},$time,4)";
+	$sql="insert into article(title,content,publish_time,created_time,type) value('{$proxyArray[$i]['title']}','{$proxyArray[$i]['content']}',{$proxyArray[$i]['time']},$time,2)";
 	$res=$db->query($sql);
 	if(!$res){
 		die;
